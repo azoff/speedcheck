@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: azoff/speedcheck/db
+    build: db
+    volumes:
+      - sqlite:/var/db
+    command: migrate.sh /var/db/speedcheck.db
+
+  sample_speedtest:
+    image: azoff/speedcheck/tasks
+    build: tasks
+    depends_on:
+      - db
+    volumes:
+      - sqlite:/var/db
+    command: sample_speedtest.py /var/db/speedcheck.db
+
+volumes:
+  sqlite:
