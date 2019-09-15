@@ -1,23 +1,22 @@
 version: "3.7"
 
-x-sqlite-volume: &sqlite-volume
-  volumes:
-    - sqlite:/var/db
-
 x-task: &task
-  <<: *sqlite-volume
   image: azoff/speedcheck/tasks
   build: tasks
   depends_on:
     - db
+  volumes:
+    - sqlite:/var/db
+    - ./secrets.json:/run/secrets/speedcheck/secrets.json
 
 services:
 
   db:
-    <<: *sqlite-volume
     image: azoff/speedcheck/db
     build: db
     command: migrate.sh /var/db/speedcheck.db
+    volumes:
+      - sqlite:/var/db
 
   sample_speedtest:
     <<: *task
