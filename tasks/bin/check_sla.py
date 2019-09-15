@@ -42,11 +42,11 @@ else:
 	logging.info('connecting to twitter...')
 	api = twitter.Api(**secrets['twitter_api'])
 	logging.info(f'posting status update...')
-	msg = api.PostUpdate(secrets['status'] % {
+	status = api.PostUpdate(secrets['status'] % {
 		'offset': secrets['offset'][1:],
 		'download': download
 	}, media=row['share'])
-	print('>>>', msg)
+	logging.info(f'status update: {status.urls[0].expanded_url}')
 
 
 logging.info(f'cleaning up...')
