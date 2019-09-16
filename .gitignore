@@ -1,2 +1,3 @@
 .DS_Store
-secrets.json
+secrets.yml
+dockerconfigjson.yml

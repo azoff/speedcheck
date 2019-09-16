@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sqlite-migrate
+spec:
+  template:
+    spec:
+      containers:
+      - name: sqlite-migrate
+        image: k8s.azof.fr/azoff/db:1.0.3
+        command: ["migrate.sh". "/var/db/speedcheck.db"]
+        volumeMounts:
+        - name: sqlite
+          mountPath: /var/db
+      imagePullSecrets:
+      - name: dockerconfigjson
+      volumes:
+      - name: sqlite
+        persistentVolumeClaim:
+          claimName: sqlite
+      restartPolicy: Never
+  backoffLimit: 4

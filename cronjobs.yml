@@ -1,0 +1,60 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sample-speedtest
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sample-speedtest
+            image: k8s.azof.fr/azoff/speedcheck/tasks:1.0.3
+            command: ["sample_speedtest.py", "/var/db/speedcheck.db"]
+            volumeMounts:
+            - name: sqlite
+              mountPath: /var/db
+          imagePullSecrets:
+          - name: dockerconfigjson
+          volumes:
+          - name: sqlite
+            persistentVolumeClaim:
+              claimName: sqlite
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: check-sla
+spec:
+  schedule: "@weekly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: check-sla
+            image: k8s.azof.fr/azoff/speedcheck/tasks:1.0.3
+            command: ["check_sla.py", "/var/db/speedcheck.db", "/run/secrets/speedcheck/secrets.json"]
+            volumeMounts:
+            - name: sqlite
+              mountPath: /var/db
+            - name: secrets-json
+              mountPath: /run/secrets/speedcheck/secrets.json
+              subPath: secrets.json
+              readOnly: true
+          imagePullSecrets:
+          - name: dockerconfigjson
+          volumes:
+          - name: sqlite
+            persistentVolumeClaim:
+              claimName: sqlite
+          - name: secrets-json
+            secret:
+              secretName: secrets
+              items:
+              - key: secrets.json
+                path: secrets.json
+          restartPolicy: OnFailure

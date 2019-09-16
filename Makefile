@@ -2,7 +2,6 @@
 
 version ?= latest
 namespace ?= speedcheck
-secret ?= speedcheck
 registry ?= k8s.azof.fr
 
 build: db/Dockerfile tasks/Dockerfile
@@ -24,4 +23,16 @@ namespace:
 	kubectl create namespace ${namespace}
 
 secrets:
-	kubectl --namespace=${namespace} create secret ${secret} --from-file=secrets.json
+	kubectl --namespace=${namespace} apply -f secrets.yml
+
+volumes:
+	kubectl --namespace=${namespace} apply -f volumes.yml
+
+dockerconfigjson:
+	kubectl --namespace=${namespace} apply -f dockerconfigjson.yml
+
+jobs:
+	kubectl --namespace=${namespace} apply -f cronjobs.yml
+
+cronjobs:
+	kubectl --namespace=${namespace} apply -f cronjobs.yml
