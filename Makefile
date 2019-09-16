@@ -32,7 +32,7 @@ dockerconfigjson:
 	kubectl --namespace=${namespace} apply -f dockerconfigjson.yml
 
 jobs:
-	kubectl --namespace=${namespace} apply -f cronjobs.yml
+	kubectl --namespace=${namespace} apply -f jobs.yml
 
 cronjobs:
 	kubectl --namespace=${namespace} apply -f cronjobs.yml
