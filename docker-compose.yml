@@ -5,6 +5,7 @@ x-task: &task
   build: tasks
   environment:
     - SECRETS_PATH=/run/secrets/speedcheck/secrets.json
+    - SQLITE3_DB_PATH=/var/db/speedcheck.db
   volumes:
     - sqlite:/var/db
     - secrets:/run/secrets
@@ -31,6 +32,19 @@ services:
   check_sla:
     <<: *task
     command: check_sla.py /var/db/speedcheck.db
+
+  server:
+    image: azoff/speedcheck/server
+    build: server
+    environment:
+      - FLASK_ENV=development
+      - SQLITE3_DB_PATH=/var/db/speedcheck.db
+    volumes:
+      - ./server/app:/var/app
+      - sqlite:/var/db
+    ports:
+      - 4000:4000
+
 
 volumes:
   sqlite:

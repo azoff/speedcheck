@@ -13,11 +13,13 @@ ifneq ($(version), latest)
 endif
 	docker tag azoff/speedcheck/db ${registry}/azoff/speedcheck/db:${version}
 	docker tag azoff/speedcheck/tasks ${registry}/azoff/speedcheck/tasks:${version}
+	docker tag azoff/speedcheck/server ${registry}/azoff/speedcheck/server:${version}
 
 push: tag
 	git push --tags
 	docker push ${registry}/azoff/speedcheck/db:${version}
 	docker push ${registry}/azoff/speedcheck/tasks:${version}
+	docker push ${registry}/azoff/speedcheck/server:${version}
 
 namespace:
 	kubectl create namespace ${namespace}
