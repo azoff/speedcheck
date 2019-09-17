@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: sqlite-migrate
-        image: k8s.azof.fr/azoff/speedcheck/db:1.0.5
+        image: k8s.azof.fr/azoff/speedcheck/db:1.0.7
         command: ["migrate.sh", "/var/db/speedcheck.db"]
         volumeMounts:
         - name: sqlite
