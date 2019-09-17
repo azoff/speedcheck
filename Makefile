@@ -38,3 +38,9 @@ jobs:
 
 cronjobs:
 	kubectl --namespace=${namespace} apply -f cronjobs.yml
+
+services:
+	kubectl --namespace=${namespace} apply -f services.yml
+
+deployments:
+	kubectl --namespace=${namespace} apply -f deployments.yml

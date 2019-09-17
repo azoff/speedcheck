@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: speedcheck-server
+  name: server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: speedcheck-server
+      app: server
   template:
     metadata:
       labels:
-        app: speedcheck-server
+        app: server
     spec:
       containers:
-      - name: speedcheck-server
-        image: k8s.azof.fr/azoff/speedcheck/server:1.0.4
+      - name: server
+        image: k8s.azof.fr/azoff/speedcheck/server:1.0.7
         ports:
         - containerPort: 4000
         env:

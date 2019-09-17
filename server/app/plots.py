@@ -5,7 +5,7 @@ import plotly.graph_objects as pgo
 
 profile = flask.Blueprint('profile', __name__)
 
-@profile.route('/history.svg')
+@profile.route('/history/')
 def history():
 	args = flask.request.args
 	start_datetime = args.get('start_datetime', 'now')
