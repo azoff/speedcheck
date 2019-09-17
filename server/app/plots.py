@@ -1,6 +1,7 @@
 import flask
 import db
-# import plotly.graph_objects as pgo
+import dateutil.parser
+import plotly.graph_objects as pgo
 
 profile = flask.Blueprint('profile', __name__)
 
@@ -18,31 +19,26 @@ def history():
 		and datetime(`timestamp`) <= datetime(?, ?)
 	''', (start_datetime, start_offset, end_datetime, end_offset))
 
-	datetimes, downloads, uploads, share_links = zip(*rows)
+	datetime_strs, downloads, uploads, share_links = zip(*rows)
+	datetimes = [dateutil.parser.parse(s) for s in datetime_strs]
 
-	# fig = pgo.Figure()
+	fig = pgo.Figure()
 
-	# timestamps = []
-	# downloads = []
-	# uploads = []
-	# shares = []
+	fig.add_trace(
+		pgo.Scattergl(
+			x=datetimes,
+			y=downloads,
+			name='Download',
+			line_color='deepskyblue',
+			opacity=0.8))
 
-	# fig.add_trace(pgo.Scatter(
-	#                 x=df.Date,
-	#                 y=df['AAPL.High'],
-	#                 name="AAPL High",
-	#                 line_color='deepskyblue',
-	#                 opacity=0.8))
+	fig.add_trace(
+		pgo.Scattergl(
+			x=datetimes,
+			y=uploads,
+			name='Upload',
+			line_color='dimgray',
+			opacity=0.8))
 
-	# fig.add_trace(go.Scatter(
-	#                 x=df.Date,
-	#                 y=df['AAPL.Low'],
-	#                 name="AAPL Low",
-	#                 line_color='dimgray',
-	#                 opacity=0.8))
 
-	# # Use date string to set xaxis range
-	# fig.update_layout(xaxis_range=['2016-07-01','2016-12-31'],
-	#                   title_text="Manually Set Date Range")
-	# fig.show()
-	return ''
+	return flask.Response(fig.to_html())

@@ -1,6 +1,7 @@
 FROM python:3-alpine
 
-RUN pip install plotly flask gunicorn
+ADD requirements.txt /etc/app/requirements.txt
+RUN pip install -r /etc/app/requirements.txt
 
 ARG SQLITE3_DB_PATH=/var/lib/sqlite3.db
 ENV SQLITE3_DB_PATH=$SQLITE3_DB_PATH
