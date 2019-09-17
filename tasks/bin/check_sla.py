@@ -21,13 +21,14 @@ with open(secrets_path) as secrets_file:
 	secrets = json.load(secrets_file)
 
 offset = secrets['offset']
-logging.info(f'checking {offset} average...')
+logging.info(f'checking {offset} maximum...')
 cur = conn.cursor()
 cur.execute('''
 	select download, share
 	from speedtest
 	where datetime(`timestamp`) >= datetime('now', ?)
 	order by download desc
+	limit 1
 ''', (offset,))
 
 sla = secrets['minimum']
