@@ -22,7 +22,7 @@ spec:
             value: /var/db/speedcheck.db
         volumeMounts:
         - name: sqlite
-          mountPath: /var/db/speedcheck.db
+          mountPath: /var/db
       imagePullSecrets:
       - name: dockerconfigjson
       volumes:
