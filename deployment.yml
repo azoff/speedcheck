@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speedcheck-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speedcheck-server
+  template:
+    metadata:
+      labels:
+        app: speedcheck-server
+    spec:
+      containers:
+      - name: speedcheck-server
+        image: k8s.azof.fr/azoff/speedcheck/server:1.0.4
+        ports:
+        - containerPort: 4000
+        env:
+          - name: SQLITE3_DB_PATH
+            value: /var/db/speedcheck.db
+        volumeMounts:
+        - name: sqlite
+          mountPath: /var/db/speedcheck.db
+      imagePullSecrets:
+      - name: dockerconfigjson
+      volumes:
+      - name: sqlite
+        persistentVolumeClaim:
+          claimName: sqlite
