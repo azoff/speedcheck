@@ -3,13 +3,19 @@ version: "3.7"
 x-task: &task
   image: azoff/speedcheck/tasks
   build: tasks
-  depends_on:
-    - db
+  environment:
+    - SECRETS_PATH=/run/secrets/speedcheck/secrets.json
   volumes:
     - sqlite:/var/db
-    - ./secrets.json:/run/secrets/speedcheck/secrets.json
+    - secrets:/run/secrets
 
 services:
+
+  secrets:
+    image: azoff/docker-mount-k8s-secrets:1.1.0
+    environment:
+      - KUBE_NAMESPACE=speedcheck
+    command: secrets=speedcheck
 
   db:
     image: azoff/speedcheck/db
@@ -28,3 +34,4 @@ services:
 
 volumes:
   sqlite:
+  secrets:
